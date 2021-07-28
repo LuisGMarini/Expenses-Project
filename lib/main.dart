@@ -45,9 +45,24 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
   final List<Transaction> _transactions = [];
   bool _showChart = false;
+
+  @override
+  void initState() {
+   super.initState();
+   WidgetsBinding.instance!.addObserver(this);
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state){
+
+  }
+  @override
+  void dispose(){
+    super.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
+  }
 
   List<Transaction> get _recentTransactions {
     return _transactions
@@ -135,9 +150,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final bodyPage = SafeArea(
         child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
           //if (isLandscape)
           //Row(
           //mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +177,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: TransactionList(_transactions, _removeTransaction)),
         ],
       ),
-    ));
+    )
+    );
 
     return Platform.isIOS
         ? CupertinoPageScaffold(
